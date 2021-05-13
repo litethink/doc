@@ -1,0 +1,44 @@
+#手动安装
+#https://github.com/v2ray/v2ray-core/releases/*** # 这里自寻最新版本
+unzip v2ray-???.zip
+cd v2ray-???
+mkdir /usr/bin/v2ray
+chmod a+x v2ray v2ctl
+cp v2ray /usr/bin/v2ray/v2ray
+cp v2ctl /usr/bin/v2ray/v2ctl
+cp geoip.dat /usr/bin/v2ray/geoip.dat
+cp geosite.dat /usr/bin/v2ray/geosite.dat
+mkdir /etc/v2ray/
+cp vpoint_vmess_freedom.json /etc/v2ray/config.json
+
+#生成V2Ray服务
+cp ./systemd/v2ray.service /usr/lib/systemd/system
+mkdir /var/log/v2ray/
+touch /var/log/v2ray/access.log
+touch /var/log/v2ray/error.log
+touch /var/run/v2ray.pid
+systemctl start v2ray
+systemctl status v2ray
+systemctl enable v2ray
+
+
+#更改客户端配置
+将 python backup/script/vmess2json.py --outbound  vmess://????... 转换后的内容 
+添加到outbound
+
+example:
+更改/etc/v2rayconfig.json的内容
+{ 
+	"inbound":{
+		"port": 1080,
+		"protocol": "socks",
+		"domainOverride":["tls","http"],
+		"settings":{
+		"auth":"noauth"
+		}
+	}
+    "outbound":{
+        ......
+    }
+
+}
